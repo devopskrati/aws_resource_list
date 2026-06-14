@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export PATH=$PATH:/usr/local/bin
 # This script lists all AWS resources in the current account and region.
 ########################
 # Usage: ./aws_resource_list.sh
@@ -36,7 +36,7 @@ if ! command -v aws &> /dev/null; then
 fi
 
 # check if AWS CLI is configured
-if [ ! -d ~/.aws/credentials ]; then
+if [ ! -f ~/.aws/credentials ]; then
     echo "AWS CLI is not configured. Please configure your credentials."
     exit 1
 fi
@@ -44,6 +44,7 @@ fi
 # Execute the AWS CLI command based on the service name
 case "$2" in
     "ec2")
+        echo "ec2 instances -----"
         aws ec2 describe-instances --region "$1" --query 'Reservations[].Instances[].{InstanceId:InstanceId,State:State.Name,Type:InstanceType,LaunchTime:LaunchTime}' --output table
         ;;
     "s3")
